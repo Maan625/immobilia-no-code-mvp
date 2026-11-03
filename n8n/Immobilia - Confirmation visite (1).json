@@ -1,0 +1,188 @@
+{
+  "name": "Immobilia - Confirmation visite",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableTokenApi",
+        "baseId": {
+          "__rl": true,
+          "value": "app9f6vHWeZFJUBn9",
+          "mode": "id"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "tblsI4nDsitX9Et2v",
+          "mode": "id"
+        },
+        "triggerField": "Dernière modification statut",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "74ead431-9555-4db9-b787-c38f8eb658e3",
+      "name": "Airtable Trigger",
+      "alwaysOutputData": false,
+      "notesInFlow": false,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "pyAjD3jlLeDOoZu0",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d9235997-0dd4-45e6-a4d0-a3f61dff128c",
+              "leftValue": "={{ $json.fields.Statut.trim() }}",
+              "rightValue": "Acceptée",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ccecf646-32e7-4cd9-aaa4-cc4637403013",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "example@gmail.com",
+          "mode": "list",
+          "cachedResultName": "example@gmail.com"
+        },
+        "start": "={{ DateTime.fromISO($json.fields['Date souhaitée'], { zone: 'utc' }).setZone('Europe/Paris').toISO() }}",
+        "end": "={{ DateTime.fromISO($json.fields['Date souhaitée'], { zone: 'utc' }).setZone('Europe/Paris').plus({ hours: 1 }).toISO() }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.fields['Email client'] }}",
+            "={{ $json.fields['Email agent'][0] }}"
+          ],
+          "description": "=Client : {{ $json.fields['Name'] }}  Bien : {{ $json.fields['Type'] }}  Adresse : {{ $json.fields['Adresse'][0] }}  Agent : {{ $json.fields['Nom agent'][0] }}  Email client : {{ $json.fields['Email client'] }}  Email agent : {{ $json.fields['Email agent'][0] }}",
+          "summary": "=Visite un bien ( {{ $json.fields['Type'] }} )"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        -192
+      ],
+      "id": "ddf1f383-11bf-4086-a3ad-67ffe59a1536",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "x0m68GqWiMMUZzBC",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Airtable Trigger').item.json.fields['Email client'] }}",
+        "subject": "=Visite un bien ({{ $('Airtable Trigger').item.json.fields['Type'] }})",
+        "message": "=<p>Bonjour {{ $('Airtable Trigger').item.json.fields['Prénom client'] }},</p>  <p>Votre demande de visite a été acceptée.</p>  <p> <strong>Bien :</strong> {{ $('Airtable Trigger').item.json.fields['Type'] }}<br> <strong>Adresse :</strong> {{ $('Airtable Trigger').item.json.fields['Adresse'][0] }}<br> <strong>Date :</strong> {{ $('Airtable Trigger').item.json.fields['Date souhaitée'] }}<br> <strong>Agent :</strong> {{ $('Airtable Trigger').item.json.fields['Nom agent'][0] }}<br> <strong>Email de l’agent :</strong> {{ $('Airtable Trigger').item.json.fields['Email agent'][0] }} </p>  <p>À bientôt,<br> Immobilia</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        640,
+        -192
+      ],
+      "id": "24034c16-fc42-4eaf-a4c3-0b1d0784f59f",
+      "name": "Send a message",
+      "webhookId": "76c9d05b-fe55-4a82-aed3-f8004ff2d83f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "ghLb5fARvl9CYqab",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "Europe/Paris",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "72b6904b-80bd-495a-bc7b-41feb7ca1806",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "202bfd715901f0ea4412a1e5e722b974d03c5f0e8c57ccf887743418d5df8ffd"
+  },
+  "nodeGroups": [],
+  "id": "a9CHbIBOn6JOjub7",
+  "tags": []
+}
