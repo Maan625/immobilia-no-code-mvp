@@ -1,6 +1,6 @@
 # Immobilia — MVP No-Code pour une agence immobilière
-![Immobilia - MVP No-Code] (images/softr-client.png)
-![Immobilia - MVP No-Code](images/softr-agent.png)
+ 
+![Immobilia - MVP No-Code](images/cover-imomobilia.png)
 ## Présentation
 
 Immobilia est un projet réalisé dans le cadre de ma formation **Chef de projet No-Code & IA**.
