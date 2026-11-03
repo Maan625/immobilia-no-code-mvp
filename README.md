@@ -6,6 +6,15 @@ Immobilia est un projet réalisé dans le cadre de ma formation **Chef de projet
 
 L’objectif était de concevoir un MVP pour une agence immobilière indépendante afin de centraliser les biens, gérer les demandes de visite et automatiser certaines tâches répétitives.
 
+## Livrables
+
+- [Présentation de soutenance](docs/presentation-soutenance.pdf)
+- [Arborescence](sources/arborescence.pdf)
+- [User flow](sources/Userflows.pdf)
+- [Architecture technique](sources/architecture-technique.pdf)
+- [Wireframes](sources/wireframes.pdf)
+- [Workflow n8n](sources/Workflow_n8n.pdf)
+
 ## Contexte
 
 L’agence Immobilia gérait principalement ses données avec des fichiers Excel, des emails, WhatsApp et des agendas individuels.
