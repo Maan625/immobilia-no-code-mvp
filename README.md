@@ -15,6 +15,17 @@ L’objectif était de concevoir un MVP pour une agence immobilière indépendan
 - [Wireframes](sources/wireframes.pdf)
 - [Workflow n8n](sources/Workflow_n8n.pdf)
 
+## Aperçu visuel
+
+### Espace client
+![Espace client Softr](images/softr-client.png)
+
+### Espace agent
+![Espace agent Softr](images/softr-agent.png)
+
+### Workflow n8n
+![Workflow n8n](images/workflow-n8n.png)
+
 ## Contexte
 
 L’agence Immobilia gérait principalement ses données avec des fichiers Excel, des emails, WhatsApp et des agendas individuels.
